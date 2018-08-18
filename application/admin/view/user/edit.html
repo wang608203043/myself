@@ -1,0 +1,189 @@
+﻿{include file="common/meta"}
+<title>修改</title>
+<link rel="stylesheet" href="__STATIC__/hui/lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+</head>
+<body>
+<div class="pos-a" style="width:200px;left:0;top:0; bottom:0; height:100%; border-right:1px solid #e5e5e5; background-color:#f5f5f5; overflow:auto;">
+	<ul id="treeDemo" class="ztree"></ul>
+</div>
+<div style="margin-left:200px;">
+<article class="page-container">
+	<form class="form form-horizontal" id="form-add">
+		<input type="hidden" name="id" value="{$detail.id}">
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2">姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.uname}" placeholder="" name="uname">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>电话：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.phone}    (不可修改)" readonly style="color: #999999">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2">可用余额：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.balance}" name="balance">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>总佣金：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.amount}" readonly>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2">登陆密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="password" value="{$detail.password}" class="input-text" name="password">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2">二级密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="password" class="input-text" value="{$detail.secondaryPassword}" name="secondaryPassword">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2">支付宝账号：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.aliAccount}" placeholder="" name="aliAccount">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>等级：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+			<select class="select" name="level" size="1" disabled>
+				<option value="1" {if $detail.level==1}selected{/if}>1600</option>
+				<option value="2" {if $detail.level==2}selected{/if}>3200</option>
+				<option value="3" {if $detail.level==3}selected{/if}>4800</option>
+			</select>
+			</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>是否激活：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.status?'未激活':'已激活'}" readonly>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>上级会员：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.parent.uname}" readonly>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"></label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="c-red">注： 带 * 号的不可编辑</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-2 col-sm-offset-2">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</article>
+<div>
+<!--_footer 作为公共模版分离出去-->
+{include file="common/footer"}
+<!--/_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__STATIC__/hui/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="__STATIC__/hui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__STATIC__/hui/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="__STATIC__/hui/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__STATIC__/hui/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    var setting = {
+        view: {
+            dblClickExpand: false,
+            showLine: false,
+            selectedMulti: false
+        },
+        data: {
+            key: {
+                children: "children",
+                name: "uname",
+                title: "uname",
+                url: "url"
+            },
+            simpleData: {
+                enable:true,
+                idKey: "id",
+                pIdKey: "pid",
+                rootPId: "0"
+            }
+        },
+        callback: {
+            beforeClick: function(treeId, treeNode) {
+                //var zTree = $.fn.zTree.getZTreeObj(treeId);
+                //var url = '{:url(\'index\')}?pid='+treeNode.pid;
+                //layerFull('节点编辑',url)
+            }
+        }
+    };
+
+    var zNodes = {:json_encode($all)};
+
+    $(document).ready(function(){
+        var t = $("#treeDemo");
+        t = $.fn.zTree.init(t, setting, zNodes);
+        var nodes = t.getNodes();
+        for (var i = 0; i <3; i++) { //设置节点展开
+            t.expandNode(nodes[i], true, false, false);
+        }
+    });
+$(function(){
+    var index;
+	$("#form-add").validate({
+		rules:{
+			name:{
+				required:true
+			},
+			phone:{
+				required:true
+			},
+			birth:{
+				required:true
+			}
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				type: 'post',
+				url: "{:url('edit_confirm')}" ,
+                beforeSend:function(){
+                    index = layer.load(1, {
+                        shade: [0.5,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                complete: function () {
+                    layer.close(index);
+                },
+				success: function(res){
+					if (res.code==1){
+						layer.msg('保存成功',{icon:1,time:1000});
+						setTimeout(function () {
+							parent.location.reload();
+						},1000)
+					}else {
+						layer.msg(res.msg,{icon:2,time:1000});
+					}
+				},
+				error: function(XmlHttpRequest, textStatus, errorThrown){
+					layer.msg('error!',{icon:2,time:1000});
+				}
+			});
+		}
+	});
+});
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

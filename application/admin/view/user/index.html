@@ -1,0 +1,255 @@
+﻿{include file="common/meta"}
+<title>会员管理</title>
+<link rel="stylesheet" href="__STATIC__/hui/lib/zTree/v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+</head>
+<body>
+<div class="pos-a" style="width:200px;left:0;top:0; bottom:0; height:100%; border-right:1px solid #e5e5e5; background-color:#f5f5f5; overflow:auto;">
+	<ul id="treeDemo" class="ztree"></ul>
+</div>
+<div style="margin-left:200px;">
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 会员管理 <span class="c-gray en">&gt;</span> 会员列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<form action="{:url('queryByKeywords')}" method="post">
+		<div class="text-c"> 日期范围：
+			<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd'})" id="datemin" class="input-text Wdate" style="width:120px;" name="start_time">
+			-
+			<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd'})" id="datemax" class="input-text Wdate" style="width:120px;" name="end_time">
+			<input type="text" class="input-text" style="width:250px" placeholder="输入会员姓名,电话,卡号" id="" name="keywords">
+			<button type="submit" class="btn btn-success"><i class="Hui-iconfont">&#xe665;</i> 搜会员</button>
+		</div>
+	</form>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" style="display: flex">
+		<a href="javascript:;" onclick="layerFull('添加会员','{:url(\'add\')}')" class="btn btn-danger radius mr-15"><i class="Hui-iconfont">&#xe600;</i> 添加会员</a>
+		<div class="btn-group">
+			<span class="btn {$status==0?'btn-primary c-white':'btn-default'} radius"><a href="{:url('index',['status'=>0])}">未激活</a></span>
+			<span class="btn {$status==1?'btn-primary c-white':'btn-default'} radius"><a href="{:url('index',['status'=>1])}" >已激活</a></span>
+		</div>
+	</span> <span class="r">共有数据：<strong>{$list|count}</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th scope="col" colspan="20">会员列表</th>
+			</tr>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="40">ID</th>
+				<th width="80">姓名</th>
+				<th width="100">电话</th>
+				<th width="100">头像</th>
+				<th width="100">推广码</th>
+				<th width="50">等级</th>
+				<th width="100">总佣金</th>
+				<th width="100">可用余额</th>
+				<th width="150">支付宝账号</th>
+				<th width="60">状态</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="v"}
+			<tr class="text-c">
+				<td><input type="checkbox" value="" name=""></td>
+				<td>{$i}</td>
+				<td>{$v.uname}</td>
+				<td>{$v.phone}</td>
+				<td><img src="{$v.imgUrl}" style="width: 30px;height: 30px;border-radius: 50%"></td>
+				<td><img src="{$v.extensionCode}" style="width: 30px;height: 30px;"></td>
+				<td>{$v.level}</td>
+				<td>{$v.amount}</td>
+				<td>{$v.balance}</td>
+				<td>{$v.aliAccount}</td>
+				<td class="td-status">
+					<span class="label {$v.status==1?'label-success':'label-defaunt'} radius">{$v.status==1?'已激活':'未激活'}</span>
+				</td>
+				<td class="td-manage">
+					{if $v.status==0}
+					<a style="text-decoration:none" onClick="{$v.status==1?'stop':'start'}(this,'{$v.id}','冻结','激活','{:url(\'changeStatus\')}')" href="javascript:;" title="{$v.status==0?'激活':'冻结'}"><i class="Hui-iconfont">&#xe631;</i>激活</a>
+					{/if}
+					<a title="编辑" href="javascript:;" onclick="layerFull('编辑','{:url(\'edit\',[\'id\'=>$v.id])}')" class="ml-15" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{$list->render()}
+</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+{include file="common/footer"}
+<!--/_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__STATIC__/hui/lib/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="__STATIC__/hui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script>
+    var setting = {
+        view: {
+            dblClickExpand: false,
+            showLine: false,
+            selectedMulti: false
+        },
+        data: {
+            key: {
+                children: "children",
+                name: "uname",
+                title: "uname",
+                url: "url"
+            },
+            simpleData: {
+                enable:true,
+                idKey: "id",
+                pIdKey: "pid",
+                rootPId: "0"
+            }
+        },
+        callback: {
+            beforeClick: function(treeId, treeNode) {
+                //var zTree = $.fn.zTree.getZTreeObj(treeId);
+                //var url = '{:url(\'index\')}?pid='+treeNode.pid;
+                //layerFull('节点编辑',url)
+            }
+        }
+    };
+
+    var zNodes = {$all};
+
+    $(document).ready(function(){
+        var t = $("#treeDemo");
+        t = $.fn.zTree.init(t, setting, zNodes);
+        var nodes = t.getNodes();
+        for (var i = 0; i <3; i++) { //设置节点展开
+            t.expandNode(nodes[i], true, false, false);
+        }
+    });
+
+    function stop(obj,id,down_text,up_text,url){
+        layer.confirm('确认要'+down_text+'吗？',function(index){
+            $.post(url,{id:id,status:0},function (res) {
+                if (res.code==1){
+                    $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="start(this,'+id+',\''+down_text+'\',\''+up_text+'\',\''+url+'\')" href="javascript:;" title="'+up_text+'"><i class="Hui-iconfont">&#xe603;</i></a>');
+                    $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已'+down_text+'</span>');
+                    $(obj).remove();
+                    layer.msg('已'+down_text+'!',{icon: 5,time:1000});
+                }
+                if (res.code==0){
+                    layer.msg(res.msg,{icon: 7,time:1000});
+                }
+            })
+
+        });
+    }
+
+    function start(obj,id,down_text,up_text,url){
+        layer.confirm('确认要'+up_text+'吗？',function(index){
+            $.post(url,{id:id,status:1},function (res) {
+                if (res.code==1){
+                    $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="stop(this,'+id+',\''+down_text+'\',\''+up_text+'\',\''+url+'\')" href="javascript:;" title="'+down_text+'"><i class="Hui-iconfont">&#xe6de;</i></a>');
+                    $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已'+up_text+'</span>');
+                    $(obj).remove();
+                    layer.msg('已'+up_text+'!',{icon: 6,time:1000});
+                    setTimeout(function () {
+						location.reload();
+                    },1000)
+                }
+                if (res.code==0){
+                    layer.msg(res.msg,{icon: 7,time:1000});
+                }
+            })
+
+        });
+    }
+</script>
+<!--<script type="text/javascript">-->
+<!--$('#excel').change(function () {-->
+    <!--var file = this.files[0];-->
+	<!--var dataForm = new FormData();-->
+	<!--dataForm.append('excel',file);-->
+    <!--$.ajax({-->
+        <!--url: "{:url('upload')}",-->
+        <!--type: "POST",-->
+        <!--data: dataForm,-->
+        <!--processData: false,  // tell jQuery not to process the data-->
+        <!--contentType: false,   // tell jQuery not to set contentType-->
+		<!--success:function (res) {-->
+            <!--if (res.code==1){-->
+                <!--layer.msg('导入成功',{icon:6,time:1000})-->
+				<!--setTimeout(function () {-->
+					<!--location.reload();-->
+                <!--},1000)-->
+			<!--}else {-->
+                <!--layer.msg(res.msg,{icon:6,time:1000})-->
+                <!--setTimeout(function () {-->
+                    <!--location.reload();-->
+                <!--},1000)-->
+			<!--}-->
+        <!--}-->
+    <!--});-->
+<!--})-->
+<!--var remark_text,edit_input,id,remark;-->
+<!--function remark_edit(mid) {-->
+    <!--id = mid;-->
+	<!--remark = $('#remark_'+id);-->
+	<!--remark_text = $('#remark_text_'+id);-->
+    <!--edit_input = $('#edit_input_'+id);-->
+    <!--remark_text.css('display','none');-->
+    <!--edit_input.css('display','block');-->
+    <!--remark.val(remark_text.text());-->
+    <!--remark.focus();-->
+<!--}-->
+
+<!--function edit_commit() {-->
+	<!--if (remark.val()===''){-->
+	    <!--layer.msg('请输入内容',{icon:2,time:1000})-->
+	<!--}else {-->
+	    <!--$.post("{:url('remark_edit')}",{id:id,remark:remark.val()},function (res) {-->
+            <!--remark_text.css('display','block');-->
+            <!--edit_input.css('display','none');-->
+            <!--remark_text.text(remark.val());-->
+        <!--})-->
+	<!--}-->
+
+<!--}-->
+
+<!--function edit_cancel() {-->
+    <!--remark_text.css('display','block');-->
+    <!--edit_input.css('display','none');-->
+<!--}-->
+
+<!--var org_text,edit_paragraph,paragraph_select,member_id,m_hover;-->
+<!--var flag = true-->
+<!--function span_display(mid) {-->
+    <!--if (flag){-->
+        <!--$('#m_hover_'+mid).show()-->
+	<!--}-->
+<!--}-->
+
+<!--function span_hidden(mid) {-->
+    <!--$('#m_hover_'+mid).hide()-->
+<!--}-->
+<!--function start_edit(mid) {-->
+    <!--flag = false-->
+    <!--m_hover = $('#m_hover_'+mid)-->
+	<!--m_hover.hide()-->
+	<!--member_id = mid-->
+	<!--org_text = $('#org_text_'+mid)-->
+    <!--edit_paragraph = $('#edit_paragraph_'+mid)-->
+    <!--paragraph_select = $('#paragraph_select_'+mid)-->
+	<!--org_text.hide();-->
+    <!--edit_paragraph.show()-->
+<!--}-->
+<!--function paragraph_commit() {-->
+    <!--var level = paragraph_select.find('option:selected').val()-->
+    <!--var text = paragraph_select.find('option:selected').text()-->
+	<!--$.post("{:url('paragraph_edit')}",{id:member_id,level:level},function (res) {-->
+	    <!--org_text.text(text)-->
+        <!--flag = true-->
+        <!--org_text.show();-->
+        <!--edit_paragraph.hide()-->
+    <!--})-->
+<!--}-->
+<!--function paragraph_cancel() {-->
+    <!--flag = true-->
+    <!--org_text.show();-->
+    <!--edit_paragraph.hide()-->
+<!--}-->
+<!--</script>-->
+</body>
+</html>
