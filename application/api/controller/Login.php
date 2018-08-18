@@ -28,15 +28,18 @@ class Login extends Base
             ->find();
         if ($user){
             $this->createToken();
-            return json(['code'=>1,'msg'=>'success','data'=>['userInfo'=>$user]]);
+            $this->result = ['userInfo'=>$user];
+            return $this->jsonReturn();
         }else{
-            return json(['code'=>0,'msg'=>'账号或密码错误','data'=>null]);
+            $this->err_code = 1002;
+            $this->err_msg = '账号或密码错误';
+            return $this->jsonReturn(400);
         }
     }
 
     public function logout(){
         $token = $this->request->header('authorization');
         Cache::rm('token_'.$token);
-        return json(['code'=>1,'msg'=>'success','data'=>null]);
+        return $this->jsonReturn();
     }
 }

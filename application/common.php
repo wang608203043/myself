@@ -33,7 +33,7 @@ function base64_image_content($base64_image_content, $path, $uri='/upload/'){
     }
 }
 
-function createQRCode($text){
+function createQRCode($text){ //todo   二维码链接
     $res = file_get_contents('http://qr.liantu.com/api.php?text='.$text);
     !file_exists(ROOT_PATH.'public/static/qr/'.date('Ymd'))&&
     mkdir(ROOT_PATH.'public/static/qr/'.date('Ymd'));

@@ -48,14 +48,11 @@ class User extends Base
         }
         $input['password'] = md5('123456');
         $input['secondaryPassword'] = md5('123456');
-        if ($input['status']){
-            $input['extensionCode'] = createQRCode($input['phone']);
-        }
+        $input['extensionCode'] = createQRCode($input['phone']);
         $res = $this->service->model()->allowField(true)->save($input);
         if ($res){
             $uid = $this->service->model()->getLastInsID();
             $user = $this->service->model()->find($uid);
-            $isActive = $input['status']?1:0;
             Hook::listen('extension',$user);
             return json(['code'=>1,'msg'=>'success','data'=>$res]);
         }
