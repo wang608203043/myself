@@ -1,0 +1,78 @@
+﻿{include file="common/meta"}
+<title>订单详情</title>
+<style>
+    .goods-item {
+        margin-top: 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border: 1px solid #ddd;
+        width: 20%;
+        display: inline-block;
+    }
+
+    .img-container,.info-container {
+        padding: 8px;
+    }
+</style>
+</head>
+<body>
+<div class="pd-20">
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l"><b>订单详情</b></span>
+        <span style="margin-left: 35%;color: red">订单总金额：{$order.amount}10000.00元</span>
+        <span class="r">共有商品：<strong>{$order.detail|count}</strong> 种</span>
+    </div>
+    <div class="cl pd-5 bg-1 bk-gray">
+        <span class="mr-30"><b>收货人</b>：{$order.address.consignee}王冠军</span>
+        <span class="mr-30"><b>收货人电话</b>：{$order.address.consigneePhone}18571542087</span>
+        <span ><b>收货地址</b>：{$order.address.address}湖北省武汉市光谷智慧城19栋三单元101室</span>
+    </div>
+    <div class="portfolio-content">
+        <div class="goods-item">
+            <div class="img-container">
+                <img src="__STATIC__/admin/images/timg.jpg" width="100%" height="auto">
+            </div>
+            <div class="info-container">
+                <div><span><b>权健骨正基</b></span></div>
+                <div><span>原价：1068元</span><span class="r">会员价：534元</span></div>
+                <div><span>数量</span><span class="r c-red">3</span></div>
+                <div><span>总价</span><span class="r c-red">2000</span></div>
+            </div>
+        </div>
+        <div class="goods-item">
+            <div class="img-container">
+                <img src="__STATIC__/admin/images/timg.jpg" width="100%" height="auto">
+            </div>
+            <div class="info-container">
+                <div><span><b>权健骨正基</b></span></div>
+                <div><span>原价：1068元</span><span class="r">会员价：534元</span></div>
+                <div><span>数量</span><span class="r c-red">3</span></div>
+                <div><span>总价</span><span class="r c-red">2000</span></div>
+            </div>
+        </div>
+        {volist name="$order.detail" id="v"}
+        <div class="goods-item">
+            <div class="img-container">
+                <img src="__STATIC__/admin/images/timg.jpg" width="100%" height="auto">
+            </div>
+            <div class="info-container">
+                <div><span>{$v.goods.gname}</span></div>
+                <div><span>原价：{$v.goods.originPrice}元</span><span class="r">会员价：{$v.goods.vipPrice}元</span></div>
+                <div><span>数量</span><span class="r c-red">{$v.gnum}</span></div>
+                <div><span>总价</span><span class="r c-red">{$v.gAmount}</span></div>
+            </div>
+        </div>
+        {/volist}
+    </div>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+{include file="common/footer"}
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/hui/lib/lightbox2/2.8.1/js/lightbox.min.js"></script>
+<script type="text/javascript">
+</script>
+</body>
+</html>

@@ -13,7 +13,6 @@ use think\Request;
 
 class Goods extends Base
 {
-    protected $service;
     public function __construct(Request $request = null,GoodsService $service)
     {
         parent::__construct($request);

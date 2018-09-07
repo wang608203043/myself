@@ -15,7 +15,7 @@ use think\Cache;
 use think\Controller;
 use think\Hook;
 use think\Request;
-
+define('UPLOAD_PATH',ROOT_PATH.'public/upload/');
 class Base extends Controller
 {
     const KEY = 'access_token_key';

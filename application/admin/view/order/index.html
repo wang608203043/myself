@@ -1,0 +1,129 @@
+﻿{include file="common/meta"}
+<title>订单管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<form action="{:url('queryByKeywords')}" method="post">
+		<div class="text-c"> 日期范围：
+			<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd'})" id="datemin" class="input-text Wdate" style="width:120px;" name="start_time">
+			-
+			<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd'})" id="datemax" class="input-text Wdate" style="width:120px;" name="end_time">
+			<input type="text" class="input-text" style="width:250px" placeholder="输入会员姓名,电话,卡号" id="" name="keywords">
+			<button type="submit" class="btn btn-success"><i class="Hui-iconfont">&#xe665;</i> 搜订单</button>
+		</div>
+	</form>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l" style="display: flex">
+		<div class="btn-group">
+			<span class="btn {$status==0?'btn-primary c-white':'btn-default'} radius"><a href="{:url('index',['status'=>0])}">未发货</a></span>
+			<span class="btn {$status==1?'btn-primary c-white':'btn-default'} radius"><a href="{:url('index',['status'=>1])}" >已发货</a></span>
+			<span class="btn {$status==2?'btn-primary c-white':'btn-default'} radius"><a href="{:url('index',['status'=>2])}" >已完成</a></span>
+		</div>
+	</span> <span class="r">共有数据：<strong>{$list|count}</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th scope="col" colspan="20">订单列表</th>
+			</tr>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="40">ID</th>
+				<th width="80">订单号</th>
+				<th width="60">头像</th>
+				<th width="60">会员姓名</th>
+				<th width="80">会员电话</th>
+				<th width="60">订单金额</th>
+				<th width="150">付款方式</th>
+				<th width="40">是否包邮</th>
+				<th width="100">快递单号</th>
+				<th width="60">订单详情</th>
+				<th width="60">状态</th>
+				<th width="60">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="v"}
+			<tr class="text-c">
+				<td><input type="checkbox" value="" name=""></td>
+				<td>{$i}</td>
+				<td>{$v.order_sn}</td>
+				<td><img src="{$v.user.imgUrl}" style="width: 30px;height: 30px;border-radius: 50%"></td>
+				<td>{$v.user.uname}</td>
+				<td>{$v.user.phone}</td>
+				<td>{$v.amount}</td>
+				<td>
+					{switch name="$v.payType"}
+						{case value="1"}线下付款{/case}
+						{case value="2"}余额抵扣{/case}
+						{case value="3"}余额抵扣部分，线下支付部分{/case}
+					{/switch}
+				</td>
+				<td>{$v.postage?'是':'否'}</td>
+				<td>{$v.courier??'无'}</td>
+				<td><span class="label label-success radius"></span><a onclick="layerFull('订单详情','{:url(\'detail\',[\'id\'=>$v.id])}')">查看详情</a></td>
+				<td>
+					{switch name="$v.status"}
+					{case value="1"}未付款{/case}
+					{case value="2"}已发货{/case}
+					{case value="3"}已完成{/case}
+					{/switch}
+				</td>
+				<td class="td-manage">
+					{if $v.status==1}
+					<a onclick="show('{$v.id}')"><i class="Hui-iconfont">&#xe669;</i>填写运单号</a>
+					{/if}
+					{if $v.status==2}
+					<a href="http://www.kuaidi100.com/?from=openv" target="_blank"><i class="Hui-iconfont">&#xe669;</i>物流查询</a>
+					{/if}
+					{if $v.status==3}
+						已完成
+					{/if}
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{$list->render()}
+</div>
+<a href="{:url('detail',['id'=>1])}">aaa</a>
+<div id="order-model" style="display: none;text-align: center;margin-top: 10%;position: relative;">
+	<div>
+		<div>快递单号：<input type="text" class="input-text" id="courier"></div>
+	</div>
+	<button class="btn btn-primary radius mt-35" onclick="order_commit()">确认</button>
+</div>
+<!--_footer 作为公共模版分离出去-->
+{include file="common/footer"}
+<!--/_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="__STATIC__/hui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script>
+    var order_id = 0;
+    function show(id) {
+        order_id = id
+        layer.open({
+            type: 1,
+            title:'修改状态',
+            area: ['300px', '200px'], //宽高
+            content: $('#order-model')
+        });
+    }
+    function order_commit() {
+        var courier = $('#courier').val();
+        if (courier===''){
+            layer.msg('请填写运单号',{icon:2,time:1500});
+            return false;
+		}
+        $.post("{:url('changeOrder')}",{id:order_id,courier:courier},function (res) {
+            if (res.code==1){
+                layer.msg('操作成功',{icon:6,time:1000});
+                setTimeout(function () {
+                    location.reload();
+                },1000)
+            }else {
+                layer.msg(res.msg,{icon:2,time:1000});
+            }
+        })
+    }
+</script>
+</body>
+</html>

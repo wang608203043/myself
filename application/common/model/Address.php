@@ -17,4 +17,8 @@ class Address extends Model
     protected $autoWriteTimestamp = true;
     protected $createTime = 'createTime';
     protected $updateTime = 'updateTime';
+
+    public function user(){
+        return $this->belongsTo('User','uid','id')->field('id,uname,phone');
+    }
 }

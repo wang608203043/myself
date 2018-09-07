@@ -17,4 +17,20 @@ class Order extends Model
     protected $autoWriteTimestamp = true;
     protected $createTime = 'createTime';
     protected $updateTime = 'updateTime';
+
+    public function user(){
+        return $this->belongsTo('User','uid','id')->field('id,uname,phone,aliAccount');
+    }
+
+    public function address(){
+        return $this->belongsTo('Address','addressId','id');
+    }
+
+    public function consumption(){
+        return $this->hasMany('Consumption','oid','id');
+    }
+
+    public function detail(){
+        return $this->hasMany('Detail','oid','id');
+    }
 }

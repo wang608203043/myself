@@ -14,4 +14,8 @@ use think\Model;
 class Detail extends Model
 {
     protected $name = 'detail';
+
+    public function goods(){
+        return $this->belongsTo('Goods','gid','id');
+    }
 }

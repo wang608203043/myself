@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+//date : 2018-08-20
+// next : 1
+function getNextMonth(date,next) {
+    var d = new Date(date);
+    var month = d.getMonth();
+    var next_month = d.setMonth(month+next);
+    return new Date(next_month-3600*24*1000).toLocaleString().split(' ')[0].replace(/[^0-9]/g,'-');
+}
+console.log(getNextMonth('2018-08-21',1))
+</script>
+</body>
+</html>

@@ -11,12 +11,12 @@ namespace app\admin\controller;
 
 use app\common\service\UserService;
 use think\Cache;
+use think\Env;
 use think\Hook;
 use think\Request;
 
 class User extends Base
 {
-    protected $service;
     public function __construct(Request $request = null,UserService $service)
     {
         parent::__construct($request);
@@ -43,11 +43,13 @@ class User extends Base
     public function add_confirm(){
         $input = input('post.');
         $user = $this->service->model()->where(['phone'=>$input['phone']])->find();
+        $max_number = $this->service->model()->max('workNumber');
         if ($user){
             return json(['code'=>0,'msg'=>'手机号已注册','data'=>null]);
         }
         $input['password'] = md5('123456');
         $input['secondaryPassword'] = md5('123456');
+        $input['workNumber'] = $max_number?($max_number+1): Env::get('workNumberStart');
         $input['extensionCode'] = createQRCode($input['phone']);
         $res = $this->service->model()->allowField(true)->save($input);
         if ($res){

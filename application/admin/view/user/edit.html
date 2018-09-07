@@ -23,6 +23,12 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>身份证号：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.cardId}" placeholder="" name="cardId">
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-2 col-sm-2">可用余额：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="{$detail.balance}" name="balance">
@@ -53,12 +59,30 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>银行卡号：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.bankCard}" placeholder="" name="bankCard">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>开户行：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.deposit}" placeholder="中国银行" name="deposit">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>开户支行：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="{$detail.branch}" placeholder="xxx支行" name="branch">
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-2 col-sm-2"><span class="c-red">*</span>等级：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
 			<select class="select" name="level" size="1" disabled>
-				<option value="1" {if $detail.level==1}selected{/if}>1600</option>
-				<option value="2" {if $detail.level==2}selected{/if}>3200</option>
-				<option value="3" {if $detail.level==3}selected{/if}>4800</option>
+				<option value="1" {if $detail.level==1}selected{/if}>1633</option>
+				<option value="2" {if $detail.level==2}selected{/if}>3266</option>
+				<option value="3" {if $detail.level==3}selected{/if}>4899</option>
 			</select>
 			</span> </div>
 		</div>
