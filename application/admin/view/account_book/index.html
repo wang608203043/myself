@@ -1,0 +1,102 @@
+﻿{include file="common/meta"}
+<title>商品管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 账务管理 <span class="c-gray en">&gt;</span> 记账 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+	<form action="{:url('queryByKeywords')}" method="post">
+		<div class="text-c"> 日期范围：
+			<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd'})" id="datemin" class="input-text Wdate" style="width:120px;" name="start_time">
+			-
+			<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd'})" id="datemax" class="input-text Wdate" style="width:120px;" name="end_time">
+			<input type="text" class="input-text" style="width:250px" placeholder="输入记账人姓名" id="" name="keywords">
+			<button type="submit" class="btn btn-success"><i class="Hui-iconfont">&#xe665;</i> 搜账单</button>
+		</div>
+	</form>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="layerFull('添加','{:url(\'add\')}')" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe600;</i> 添加账务</a>
+	</span> <span class="r">共有数据：<strong>{$list|count}</strong> 条</span> </div>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th scope="col" colspan="9"><span>
+		<div class="btn-group">
+			<span class="btn {$type==0?'btn-primary c-white':'btn-default'} radius"><a href="{:url('index',['type'=>0])}">入账</a></span>
+			<span class="btn {$type==1?'btn-primary c-white':'btn-default'} radius"><a href="{:url('index',['type'=>1])}" >出账</a></span>
+		</div>
+	</span> </th>
+			</tr>
+			<tr class="text-c">
+				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="40">ID</th>
+				<th width="150">记账人</th>
+				<th width="150">入账/出账时间</th>
+				<th width="150">金额</th>
+				<th width="450">事项</th>
+				<th width="150">类型</th>
+				<th width="150">记账时间</th>
+				<th width="100">操作</th>
+			</tr>
+		</thead>
+		<tbody>
+		{volist name="list" id="v"}
+			<tr class="text-c">
+				<td><input type="checkbox" value="{$v.id}" name="ids"></td>
+				<td>{$i}</td>
+				<td>{$v.book_keeping}</td>
+				<td>{$v.date_time}</td>
+				<td>{$v.amount}</td>
+				<td>{$v.remark}</td>
+				<td class="td-status">
+					<span class="label {$v.type==0?'label-success':'label-defaunt'} radius">{$v.type==1?'出账':'入账'}</span>
+				</td>
+				<td>{$v.createTime}</td>
+				<td class="td-manage"><a title="编辑" href="javascript:;" onclick="layerFull('编辑','{:url(\'edit\',[\'id\'=>$v.id])}')" class="ml-15" style="text-decoration:none"><i class="Hui-iconfont">&#xe6df;</i></a></td>
+			</tr>
+		{/volist}
+		</tbody>
+	</table>
+	{if $type<10}{$list->render()}{/if}
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+{include file="common/footer"}
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    function stop(obj,id,down_text,up_text,url){
+        layer.confirm('确认要'+down_text+'吗？',function(index){
+            $.post(url,{id:id,status:0},function (res) {
+                if (res.code==1){
+                    $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="start(this,'+id+',\''+down_text+'\',\''+up_text+'\',\''+url+'\')" href="javascript:;" title="'+up_text+'"><i class="Hui-iconfont">&#xe603;</i></a>');
+                    $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已'+down_text+'</span>');
+                    $(obj).remove();
+                    layer.msg('已'+down_text+'!',{icon: 5,time:1000});
+                }
+                if (res.code==0){
+                    layer.msg(res.msg,{icon: 7,time:1000});
+                }
+            })
+
+        });
+    }
+
+    function start(obj,id,down_text,up_text,url){
+        layer.confirm('确认要'+up_text+'吗？',function(index){
+            $.post(url,{id:id,status:1},function (res) {
+                if (res.code==1){
+                    $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="stop(this,'+id+',\''+down_text+'\',\''+up_text+'\',\''+url+'\')" href="javascript:;" title="'+down_text+'"><i class="Hui-iconfont">&#xe6de;</i></a>');
+                    $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已'+up_text+'</span>');
+                    $(obj).remove();
+                    layer.msg('已'+up_text+'!',{icon: 6,time:1000});
+                }
+                if (res.code==0){
+                    layer.msg(res.msg,{icon: 7,time:1000});
+                }
+            })
+
+        });
+    }
+</script>
+</body>
+</html>
